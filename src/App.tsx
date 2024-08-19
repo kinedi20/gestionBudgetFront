@@ -1,16 +1,20 @@
-// import React from "react"
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import BudgetPage from './pages/BudgetPage';
+import AddExpenseForm from './pages/AddExpenseForm';
+import AddIncomeForm from './pages/AddIncomeForm';
 
-function App() {
-  
-
+const App: React.FC = () => {
   return (
-    <>
-       <h1 className="text-3xl font-bold underline text-red-600">
-      Simple React Typescript Tailwind Sample
-    </h1>
-  
-    </>
-  )
-}
+    <Router>
+      <Routes>
+        <Route path="/" element={<BudgetPage />} />
+        <Route path="/add-expense" element={<AddExpenseForm />} />
+        <Route path="/add-income" element={<AddIncomeForm />} />
 
-export default App
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
