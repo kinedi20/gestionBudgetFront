@@ -1,40 +1,46 @@
-import React from 'react';
-import BudgetSummary from '../pages/BudgetSummary';
-import ExpenseList from '../pages/ExpenseList';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import BudgetSummary from './BudgetSummary';
+import ExpenseList from './ExpenseList';
+import { fetchBudgetSummary, fetchTransactions, Transaction, BudgetSummary as BudgetSummaryType } from '../services/api';
 
 const BudgetPage: React.FC = () => {
-  // Les données pourraient venir d'un état global ou d'une API dans une application réelle
-  const budgetData = {
-    budget: 120000,
-    expenses: 100000,
-    balance: 20000
-  };
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [budgetSummary, setBudgetSummary] = useState<BudgetSummaryType | null>(null);
+  
 
-  const expenses = [
-    { id: 1, title: 'Nourriture', amount: 40000 },
-    { id: 2, title: 'Loyer', amount: 30000 },
-    { id: 3, title: 'Transport', amount: 10000 },
-  ];
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [transactionsData, summaryData] = await Promise.all([
+          fetchTransactions(),
+          fetchBudgetSummary()
+        ]);
+        setTransactions(transactionsData);
+        setBudgetSummary(summaryData);
+      } catch (error) {
+        console.error('Erreur lors du chargement des données:', error);
+      }
+    };
+
+    loadData();
+  }, []);
 
   return (
     <div className="container mx-auto p-4">
-      {/* En-tête de la page */}
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-teal-600">Budget</h1>
         <p className="text-gray-600">Gestion du budget</p>
       </header>
 
-      {/* Composant de résumé du budget */}
-      <BudgetSummary {...budgetData} />
-
-      {/* Composant de liste des dépenses */}
-      <ExpenseList expenses={expenses} />
-
+      {budgetSummary && <BudgetSummary {...budgetSummary} />}
+      
+      <ExpenseList expenses={transactions.filter(t => t.type === 'expense')} />
+      
       <div className="mt-4 space-x-4">
-        {/* <Link to="/add-expense" className="bg-yellow-500 text-white px-4 py-2 rounded inline-block">
+        <Link to="/add-expense" className="bg-yellow-500 text-white px-4 py-2 rounded inline-block">
           + AJOUTER DÉPENSE
-        </Link> */}
+        </Link>
         <Link to="/add-income" className="bg-green-500 text-white px-4 py-2 rounded inline-block">
           + AJOUTER REVENU
         </Link>
@@ -44,3 +50,4 @@ const BudgetPage: React.FC = () => {
 };
 
 export default BudgetPage;
+

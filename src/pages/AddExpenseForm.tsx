@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { addTransaction } from '../services/api';
 
 const AddExpenseForm: React.FC = () => {
-  // États pour stocker les valeurs du formulaire
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
-  
-  // Hook pour la navigation
   const navigate = useNavigate();
 
-  // Fonction pour gérer la soumission du formulaire
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Ici, vous ajouteriez la logique pour sauvegarder la dépense
-    console.log('Dépense ajoutée:', { title, amount });
-    // Rediriger vers la page principale après l'ajout
-    navigate('/');
+    try {
+      await addTransaction({
+        type: 'expense',
+        title: title,
+        amount: parseFloat(amount),
+      });
+      navigate('/');
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout de la dépense:', error);
+    }
   };
 
   return (
@@ -37,6 +40,7 @@ const AddExpenseForm: React.FC = () => {
           <input
             type="text"
             id="title"
+            name="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
@@ -52,6 +56,7 @@ const AddExpenseForm: React.FC = () => {
           <input
             type="text"
             id="amount"
+            name="amount"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"

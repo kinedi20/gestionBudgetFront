@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { addTransaction } from '../services/api';
 
 const AddIncomeForm: React.FC = () => {
-  // États pour stocker les valeurs du formulaire
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
-  
-  // Hook pour la navigation
   const navigate = useNavigate();
 
-  // Fonction pour gérer la soumission du formulaire
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Ici, vous ajouteriez la logique pour sauvegarder le revenu
-    console.log('Revenu ajouté:', { title, amount });
-    // Rediriger vers la page principale après l'ajout
-    navigate('/');
+    try {
+      await addTransaction({
+        type: 'income',
+        title,
+        amount: parseFloat(amount),
+      });
+      navigate('/');
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout du revenu:', error);
+    }
   };
 
   return (
