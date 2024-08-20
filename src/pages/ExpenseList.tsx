@@ -3,18 +3,22 @@ import { Transaction, deleteTransaction } from '../services/api';
 
 interface ExpenseListProps {
   expenses: Transaction[];
+  onExpensesUpdate: () => void;
 }
 
-const ExpenseList: React.FC<ExpenseListProps> = ({ expenses }) => {
+
+const ExpenseList: React.FC<ExpenseListProps> = ({ expenses, onExpensesUpdate }) => {
   const handleDelete = async (id: number) => {
     try {
       await deleteTransaction(id);
-      // Vous devrez implémenter une logique pour mettre à jour la liste des dépenses
-      // après la suppression, par exemple en utilisant un état global ou en rechargeant les données
+      console.log('Transaction supprimée avec succès');
+      onExpensesUpdate(); // Appel de la fonction pour mettre à jour la liste
     } catch (error) {
       console.error('Erreur lors de la suppression de la transaction:', error);
     }
   };
+  
+  
 
   return (
     <div>
@@ -36,11 +40,9 @@ const ExpenseList: React.FC<ExpenseListProps> = ({ expenses }) => {
                 <button 
                   onClick={() => {
                     if (expense.id !== undefined) {
-                      handleDelete(expense.id)
+                      handleDelete(expense.id);
                     }
                   }}
-                  
-                  
                   className="bg-red-500 text-white px-3 py-1 rounded"
                 >
                   supprimer

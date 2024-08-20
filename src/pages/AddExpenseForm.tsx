@@ -1,40 +1,56 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { addTransaction } from '../services/api';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { addTransaction } from "../services/api";
 
 const AddExpenseForm: React.FC = () => {
-  const [title, setTitle] = useState('');
-  const [amount, setAmount] = useState('');
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState("");
+
   const navigate = useNavigate();
+
+  // Déterminer le type de transaction basé sur le chemin de l'URL
+  const transactionType = location.pathname.includes("expense")
+    ? "expense"
+    : "income";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await addTransaction({
-        type: 'expense',
-        title: title,
+        type: transactionType,
+        title,
         amount: parseFloat(amount),
       });
-      navigate('/');
+      navigate("/");
     } catch (error) {
-      console.error('Erreur lors de l\'ajout de la dépense:', error);
+      console.error(`Erreur lors de l'ajout de la ${transactionType}:`, error);
     }
   };
 
   return (
     <div className="container mx-auto p-4">
       {/* En-tête de la page */}
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-teal-600">Budget</h1>
-        <p className="text-gray-600">Gestion du budget</p>
-      </header>
 
-      <h2 className="text-2xl font-bold mb-4 text-teal-700">AJOUTER DEPENSE</h2>
+      <div className="w-full flex justify-center">
+        <header className="mb-8 flex flex-col items-center">
+          <h1 className="text-3xl font-bold text-teal-600 text-center">
+            Budget
+          </h1>
+          <p className="text-gray-600 text-center">Gestion du budget</p>
+        </header>
+      </div>
+      
+      <h2 className="text-2xl font-bold mb-4 text-teal-700 text-center">
+        AJOUTER DEPENSE {transactionType === "income" ? "REVENU" : "DÉPENSE"}
+      </h2>
 
       <form onSubmit={handleSubmit} className="max-w-md mx-auto">
         {/* Champ pour le titre */}
         <div className="mb-4">
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
             TITRE
           </label>
           <input
@@ -50,7 +66,10 @@ const AddExpenseForm: React.FC = () => {
 
         {/* Champ pour le montant */}
         <div className="mb-4">
-          <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-2">
+          <label
+            htmlFor="amount"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
             MONTANT
           </label>
           <input

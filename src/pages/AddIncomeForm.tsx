@@ -24,12 +24,16 @@ const AddIncomeForm: React.FC = () => {
   return (
     <div className="container mx-auto p-4">
       {/* En-tête de la page */}
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-teal-600">Budget</h1>
-        <p className="text-gray-600">Gestion du budget</p>
-      </header>
+      <div className="w-full flex justify-center">
+        <header className="mb-8 flex flex-col items-center">
+          <h1 className="text-3xl font-bold text-teal-600 text-center">
+            Budget
+          </h1>
+          <p className="text-gray-600 text-center">Gestion du budget</p>
+        </header>
+      </div>
 
-      <h2 className="text-2xl font-bold mb-4 text-teal-700">AJOUTER REVENU</h2>
+      <h2 className="text-2xl font-bold mb-4 text-teal-700 text-center">AJOUTER REVENU</h2>
 
       <form onSubmit={handleSubmit} className="max-w-md mx-auto">
         {/* Champ pour le titre */}

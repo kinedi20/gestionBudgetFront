@@ -12,6 +12,7 @@ const App: React.FC = () => {
         <Route path="/add-expense" element={<AddExpenseForm />} />
         <Route path="/add-income" element={<AddIncomeForm />} />
 
+
       </Routes>
     </Router>
   );

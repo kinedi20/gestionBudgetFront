@@ -15,9 +15,9 @@ type?: string;
 }
 
 export interface BudgetSummary {
-  budget: number;
-  expenses: number;
-  balance: number;
+  remainingBudget: number;
+  totalExpenses: number;
+  totalIncome: number;
 }
 
 export const fetchTransactions = async (): Promise<Transaction[]> => {
@@ -35,7 +35,7 @@ export const deleteTransaction = async (id: number): Promise<void> => {
 };
 
 export const fetchBudgetSummary = async (): Promise<BudgetSummary> => {
-  const response = await api.get<BudgetSummary>('/transactions/summary');
+  const response = await api.get<BudgetSummary>('/transactions/summary/all');
   return response.data;
 };
 
